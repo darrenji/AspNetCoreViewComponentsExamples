@@ -16,10 +16,22 @@ namespace AspNetCoreViewComponentsExamples.ViewComponents
             repository = repo;
         }
 
-        public string Invoke()
+        //public string Invoke()
+        //{
+        //    return $"{repository.Cites.Count()} cities, "
+        //        + $"{repository.Cites.Sum(x => x.Population)} people";
+        //}
+
+        /// <summary>
+        /// 通常是Action中返回视图，但在ViewComponent中也可以返回视图
+        /// </summary>
+        /// <returns></returns>
+        public IViewComponentResult Invoke()
         {
-            return $"{repository.Cites.Count()} cities, "
-                + $"{repository.Cites.Sum(x => x.Population)} people";
+            return View(new CityViewModel {
+                Cities = repository.Cites.Count(),
+                Population = repository.Cites.Sum(c => c.Population)
+            });
         }
     }
 }
