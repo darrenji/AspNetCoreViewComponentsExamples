@@ -28,7 +28,7 @@ namespace AspNetCoreViewComponentsExamples.ViewComponents
         /// 通常是Action中返回视图，但在ViewComponent中也可以返回视图
         /// </summary>
         /// <returns></returns>
-        public IViewComponentResult Invoke()
+        public IViewComponentResult Invoke(bool showList)
         {
             //return View(new CityViewModel {
             //    Cities = repository.Cites.Count(),
@@ -43,13 +43,25 @@ namespace AspNetCoreViewComponentsExamples.ViewComponents
             //ViewComponent中的上下文数据
             //ViewComponent中的上下文中能拿到RouterData这个路由数据
             //这里的id是Country的名称
-            string target = RouteData.Values["id"] as string;
-            var cities = repository.Cites.Where(city => target == null || string.Compare(city.Country, target, true) == 0);
+            //string target = RouteData.Values["id"] as string;
+            //var cities = repository.Cites.Where(city => target == null || string.Compare(city.Country, target, true) == 0);
 
-            return View(new CityViewModel {
-                Cities=cities.Count(),
-                Population = cities.Sum(c => c.Population)
-            });
+            //return View(new CityViewModel {
+            //    Cities=cities.Count(),
+            //    Population = cities.Sum(c => c.Population)
+            //});
+
+            //在ViewComponent中设置生成哪个视图的逻辑
+            if (showList)
+            {
+                return View("CityList", repository.Cites);
+            } else
+            {
+                return View(new CityViewModel {
+                    Cities = repository.Cites.Count(),
+                    Population = repository.Cites.Sum(c => c.Population)
+                });
+            }
                
         }
     }
