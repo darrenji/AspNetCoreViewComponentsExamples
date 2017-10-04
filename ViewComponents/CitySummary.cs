@@ -37,7 +37,19 @@ namespace AspNetCoreViewComponentsExamples.ViewComponents
 
             //直接返回html代码片段
             //return Content("This is a <h3><i>string</i></h3>");
-            return new HtmlContentViewComponentResult(new HtmlString("This is a <h3><i>string</i></h3>"));
+            //return new HtmlContentViewComponentResult(new HtmlString("This is a <h3><i>string</i></h3>"));
+
+
+            //ViewComponent中的上下文数据
+            //ViewComponent中的上下文中能拿到RouterData这个路由数据
+            //这里的id是Country的名称
+            string target = RouteData.Values["id"] as string;
+            var cities = repository.Cites.Where(city => target == null || string.Compare(city.Country, target, true) == 0);
+
+            return View(new CityViewModel {
+                Cities=cities.Count(),
+                Population = cities.Sum(c => c.Population)
+            });
                
         }
     }
